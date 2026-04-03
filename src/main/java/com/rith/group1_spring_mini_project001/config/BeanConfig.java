@@ -2,6 +2,7 @@ package com.rith.group1_spring_mini_project001.config;
 
 import com.rith.group1_spring_mini_project001.service.UserAppService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,5 +23,9 @@ public class BeanConfig {
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
     }
 }
