@@ -21,7 +21,7 @@ target/
 
 ### Config file and sql ###
 src/main/resources/application.properties
-src/main/resources/script.sql
+src/main/resources/schema.sql
 
 ### NetBeans ###
 /nbproject/private/
