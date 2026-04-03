@@ -4,7 +4,7 @@ import com.rith.group1_spring_mini_project001.model.model.UserApp;
 import com.rith.group1_spring_mini_project001.util.UUIDTypeHandler;
 import org.apache.ibatis.annotations.*;
 @Mapper
-public interface UserAppRepository {
+public interface  UserAppRepository {
 
     @Select("SELECT * FROM app_users WHERE email = #{email}")
     @Results(id = "UserAppMapper", value = {
