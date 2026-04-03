@@ -19,6 +19,10 @@ target/
 *.iml
 *.ipr
 
+### Config file and sql ###
+src/main/resources/application.properties
+src/main/resources/script.sql
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
