@@ -19,14 +19,14 @@ create table app_users (
 );
 
 -- Separate OTP table
-create table otp_verifications (
-                                   otp_id      uuid primary key,
-                                   app_user_id uuid not null references app_users on delete cascade,
-                                   otp_code    varchar(10) not null,
-                                   expires_at  timestamp not null,
-                                   is_used     boolean not null default false,
-                                   created_at  timestamp not null default current_timestamp
-);
+-- create table otp_verifications (
+--                                    otp_id      uuid primary key,
+--                                    app_user_id uuid not null references app_users on delete cascade,
+--                                    otp_code    varchar(10) not null,
+--                                    expires_at  timestamp not null,
+--                                    is_used     boolean not null default false,
+--                                    created_at  timestamp not null default current_timestamp
+-- );
 
 create type frequency_type as enum ('daily', 'weekly', 'monthly');
 
