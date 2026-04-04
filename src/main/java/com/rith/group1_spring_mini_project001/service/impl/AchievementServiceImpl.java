@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +21,8 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public List<Achievement> getAchievementsCurrentUser(Integer page, Integer size) {
+    public List<Achievement> getAchievementsCurrentUser(UUID userId, Integer page, Integer size) {
         Integer offset = (page - 1) * size;
-        return achievementRepository.getAchievementsCurrentUser(offset, size);
+        return achievementRepository.getAchievementsCurrentUser(userId, offset, size);
     }
 }
