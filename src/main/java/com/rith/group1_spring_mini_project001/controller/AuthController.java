@@ -3,8 +3,12 @@ package com.rith.group1_spring_mini_project001.controller;
 import com.rith.group1_spring_mini_project001.jwt.JwtService;
 import com.rith.group1_spring_mini_project001.model.model.UserApp;
 import com.rith.group1_spring_mini_project001.model.request.AuthLoginRequest;
+import com.rith.group1_spring_mini_project001.model.request.RegisterRequest;
 import com.rith.group1_spring_mini_project001.model.response.ApiResponse;
 import com.rith.group1_spring_mini_project001.model.response.AuthLoginResponse;
+import com.rith.group1_spring_mini_project001.repository.UserAppRepository;
+import com.rith.group1_spring_mini_project001.service.OtpService;
+import com.rith.group1_spring_mini_project001.service.RedisService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 
+
 @RestController
 @RequestMapping("/api/v1/auths")
 @RequiredArgsConstructor
@@ -23,6 +28,10 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final OtpService otpService;
+    private final RedisService redisService;
+    private final UserAppRepository userAppRepository;
+    private static final String PENDING_PREFIX = "pending:";
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthLoginResponse>> login(
@@ -52,5 +61,52 @@ public class AuthController {
                         .timestamp(Instant.now())
                         .build()
         );
+    }
+    // Step 1 — save to Redis + send OTP
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<Void>> register(
+            @RequestBody RegisterRequest request) {
+
+        if (userAppRepository.existsByEmail(request.getEmail()) > 0)
+            throw new RuntimeException("Email already exists");
+
+        redisService.save(PENDING_PREFIX + request.getEmail(), request, 10);
+        otpService.sendRegisterOtp(request.getEmail());
+
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .status(HttpStatus.OK)
+                .message("OTP sent to " + request.getEmail() + ". Please verify your OTP to complete registration.")
+                .data(null)
+                .build());
+    }
+
+    // Step 2 — verify OTP + save user to DB
+    @PostMapping("/verify-otp")
+    public ResponseEntity<ApiResponse<Void>> verifyOtp(
+            @RequestParam String email,
+            @RequestParam String otp) {
+
+        otpService.verifyRegisterOtp(email, otp);
+
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .success(true)
+                .status(HttpStatus.OK)
+                .message("Account created successfully. You can now login.")
+                .timestamp(Instant.now())
+                .build());
+    }
+
+    // resend OTP
+    @PostMapping("/resend-otp")
+    public ResponseEntity<ApiResponse<Void>> resendOtp(
+            @RequestParam String email) {
+
+        otpService.sendRegisterOtp(email);
+
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .status(HttpStatus.OK)
+                .message("OTP resent to " + email)
+                .data(null)
+                .build());
     }
 }
