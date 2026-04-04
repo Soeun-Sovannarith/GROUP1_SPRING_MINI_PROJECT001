@@ -27,6 +27,10 @@ public class UserApp implements UserDetails {
 //    private String otp;
     private LocalDateTime createdAt;
 
+    public UUID getCurrentUser(){
+        return appUserId;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
