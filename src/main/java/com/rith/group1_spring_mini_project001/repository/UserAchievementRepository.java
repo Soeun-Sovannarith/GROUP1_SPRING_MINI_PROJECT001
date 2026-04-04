@@ -8,6 +8,5 @@ import java.util.List;
 @Mapper
 public interface UserAchievementRepository {
 
-
-    List<Achievement> getgetUserAchievementsCurrentUser(Integer offset, Integer size);
+    List<Achievement> getUserAchievementsCurrentUser(Integer offset, Integer size);
 }

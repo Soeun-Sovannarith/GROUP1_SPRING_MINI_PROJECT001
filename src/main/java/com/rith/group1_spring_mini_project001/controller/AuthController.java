@@ -14,6 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/api/v1/auths")
 @RequiredArgsConstructor
@@ -38,14 +40,16 @@ public class AuthController {
 
         return ResponseEntity.ok(
                 ApiResponse.<AuthLoginResponse>builder()
+                        .success(true)
                         .status(HttpStatus.OK)
                         .message("Login successful")
                         .data(AuthLoginResponse.builder()
                                 .userId(userApp.getAppUserId())
                                 .token(token)
                                 .email(userApp.getEmail())
-                                .username(userApp.getUsername())
+                                .username(userApp.getDisplayUsername())
                                 .build())
+                        .timestamp(Instant.now())
                         .build()
         );
     }
