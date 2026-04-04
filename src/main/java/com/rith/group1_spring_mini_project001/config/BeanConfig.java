@@ -1,5 +1,6 @@
 package com.rith.group1_spring_mini_project001.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rith.group1_spring_mini_project001.service.UserAppService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,5 +28,9 @@ public class BeanConfig {
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

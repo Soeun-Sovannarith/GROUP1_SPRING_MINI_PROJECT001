@@ -38,4 +38,23 @@ public interface UserAppRepository {
     """)
     @ResultMap("UserAppMapper")
     UserApp updateOtp(@Param("user") UserApp user);
+
+    @Select("""
+    INSERT INTO app_users (app_user_id, username, email, password,profile_image, is_verified, created_at)
+    VALUES (
+        #{user.appUserId}::uuid,
+        #{user.displayUsername},
+        #{user.email},
+        #{user.password},
+        #{user.profileImageUrl},
+        true,
+        now()
+    )
+    RETURNING *
+""")
+    @ResultMap("UserAppMapper")
+    UserApp save(@Param("user") UserApp user);
+
+    @Select("SELECT COUNT(*) FROM app_users WHERE email = #{email}")
+    int existsByEmail(String email);
 }
