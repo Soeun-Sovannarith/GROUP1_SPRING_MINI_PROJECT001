@@ -30,14 +30,14 @@ public class ProfileController {
     @PutMapping
     public ResponseEntity<ApiResponse<ProfileResponse>> updateUserProfile(@RequestBody @Valid ProfileRequest request){
         ProfileResponse userApp = profileService.updateUserProfile(request);
-        ApiResponse<ProfileResponse> response = ApiResponse.<ProfileResponse>builder().status(HttpStatus.OK).message("User profile updated successfully!").data(userApp).timestamp(Instant.now()).build();
+        ApiResponse<ProfileResponse> response = ApiResponse.<ProfileResponse>builder().success(true).status(HttpStatus.OK).message("User profile updated successfully!").data(userApp).timestamp(Instant.now()).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<Boolean>> deleteUserProfile(){
         profileService.deleteUserProfile();
-        ApiResponse<Boolean> response = ApiResponse.<Boolean>builder().status(HttpStatus.OK).message("User profile deleted successfully!").data(null).timestamp(Instant.now()).build();
+        ApiResponse<Boolean> response = ApiResponse.<Boolean>builder().success(true).status(HttpStatus.OK).message("User profile deleted successfully!").data(null).timestamp(Instant.now()).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -17,6 +17,6 @@ public class UserAchievementServiceImpl implements UserAchievementService {
     @Override
     public List<Achievement> getUserAchievementsCurrentUser(Integer page, Integer size) {
         Integer offset = (page - 1) * size;
-        return userAchievementRepository.getgetUserAchievementsCurrentUser(offset,size) ;
+        return userAchievementRepository.getUserAchievementsCurrentUser(offset,size) ;
     }
 }
