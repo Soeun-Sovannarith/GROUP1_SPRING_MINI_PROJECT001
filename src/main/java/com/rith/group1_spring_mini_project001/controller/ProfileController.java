@@ -23,7 +23,7 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<ApiResponse<ProfileResponse>> getUserProfile(){
         ProfileResponse userApp = profileService.getUserProfile();
-        ApiResponse<ProfileResponse> response = ApiResponse.<ProfileResponse>builder().status(HttpStatus.OK).message("User profile fetched successfully!").data(userApp).timestamp(Instant.now()).build();
+        ApiResponse<ProfileResponse> response = ApiResponse.<ProfileResponse>builder().success(true).status(HttpStatus.OK).message("User profile fetched successfully!").data(userApp).timestamp(Instant.now()).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
