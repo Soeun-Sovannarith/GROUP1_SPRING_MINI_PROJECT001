@@ -1,6 +1,5 @@
 package com.rith.group1_spring_mini_project001.controller;
 
-import com.rith.group1_spring_mini_project001.model.model.Habit;
 import com.rith.group1_spring_mini_project001.model.request.HabitRequest;
 import com.rith.group1_spring_mini_project001.model.response.ApiResponse;
 import com.rith.group1_spring_mini_project001.model.response.HabitResponse;
@@ -9,11 +8,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.DocFlavor;
 import java.time.Instant;
 import java.util.UUID;
 

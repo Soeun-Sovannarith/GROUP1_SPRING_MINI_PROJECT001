@@ -1,5 +1,6 @@
 package com.rith.group1_spring_mini_project001.model.response;
 
+import com.rith.group1_spring_mini_project001.model.model.UserApp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,6 @@ public class HabitResponse {
     private String description;
     private String frequency;
     private Boolean isActive;
-    private String appUserResponse;
+    private UserApp appUserResponse;
     private Timestamp createAt;
 }
