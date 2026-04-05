@@ -94,6 +94,22 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ProblemDetail handleIllegalArgument(
+            IllegalArgumentException ex,
+            HttpServletRequest request
+    ) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage()
+        );
+        pd.setType(URI.create("about:blank"));
+        pd.setTitle("Bad Request");
+        pd.setInstance(URI.create(request.getRequestURI()));
+        pd.setProperty("timestamp", Instant.now());
+        return pd;
+    }
+
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUnexpected(
             Exception ex,
