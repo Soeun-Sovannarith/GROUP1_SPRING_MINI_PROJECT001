@@ -1,5 +1,6 @@
 package com.rith.group1_spring_mini_project001.service.impl;
 
+import com.rith.group1_spring_mini_project001.exception.ResourceNotFoundException;
 import com.rith.group1_spring_mini_project001.model.model.Achievement;
 import com.rith.group1_spring_mini_project001.model.model.Habit;
 import com.rith.group1_spring_mini_project001.model.model.HabitLog;
@@ -27,7 +28,7 @@ public class HabitLogServiceImpl implements HabitLogService {
     @Override
     public HabitLog createHabitLog(HabitLogRequest request, UUID userId) {
         Habit habit = habitRepository.findByIdAndUserId(request.getHabitId(), userId);
-        if (habit == null) throw new RuntimeException("Habit not found");
+        if (habit == null) throw new ResourceNotFoundException("Habit with ID " + request.getHabitId() + " not found");
 
         if (habitLogRepository.hasLoggedToday(request.getHabitId())) {
             throw new IllegalArgumentException("You have already logged this habit today. Come back tomorrow!");
@@ -66,7 +67,9 @@ public class HabitLogServiceImpl implements HabitLogService {
 
     @Override
     public List<HabitLog> getHabitLogs(UUID habitId, int page, int size, UUID userId) {
-        habitRepository.findByIdAndUserId(habitId, userId); // verify ownership
+        if (habitRepository.findByIdAndUserId(habitId, userId) == null) {
+            throw new ResourceNotFoundException("Habit with ID " + habitId + " not found");
+        }
         int offset = (page - 1) * size;
         return habitLogRepository.findByHabitIdWithPagination(habitId, size, offset);
     }

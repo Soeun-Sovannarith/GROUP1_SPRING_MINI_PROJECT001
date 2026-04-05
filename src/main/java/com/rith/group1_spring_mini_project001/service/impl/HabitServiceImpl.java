@@ -1,5 +1,6 @@
 package com.rith.group1_spring_mini_project001.service.impl;
 
+import com.rith.group1_spring_mini_project001.exception.ResourceNotFoundException;
 import com.rith.group1_spring_mini_project001.model.model.Habit;
 import com.rith.group1_spring_mini_project001.model.request.HabitRequest;
 import com.rith.group1_spring_mini_project001.repository.HabitRepository;
@@ -39,7 +40,7 @@ public class HabitServiceImpl implements HabitService {
     @Override
     public Habit getHabitById(UUID habitId, UUID userId) {
         Habit habit = habitRepository.findByIdAndUserId(habitId, userId);
-        if (habit == null) throw new RuntimeException("Habit not found");
+        if (habit == null) throw new ResourceNotFoundException("Habit with ID " + habitId + " not found");
         return habit;
     }
 
