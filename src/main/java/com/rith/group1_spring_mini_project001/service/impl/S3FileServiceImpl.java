@@ -37,14 +37,20 @@ public class S3FileServiceImpl implements S3FileService {
     @Override
     public FileMetadata uploadFile(MultipartFile file) {
         createBucketIfNotExists();
-        // Generate name with uuid
+
         String originalFileName = file.getOriginalFilename();
         String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(originalFileName);
         String contentType = file.getContentType();
         if (contentType == null) {
             contentType = "application/octet-stream";
         }
+        String fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/v2/files/preview-file/" + fileName)
+                .toUriString();
 
+        if (!fileUrl.matches(".*\\.(png|svg|jpg|jpeg|gif)$")) {
+            throw new InvalidFileException("Profile image must be a valid image URL ending with .png, .svg, .jpg, .jpeg, or .gif");
+        }
         try {
             s3Client.putObject(
                     PutObjectRequest.builder()
@@ -57,14 +63,6 @@ public class S3FileServiceImpl implements S3FileService {
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload file to RustFS", e);
-        }
-
-        String fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/v2/files/preview-file/" + fileName)
-                .toUriString();
-
-        if (!fileUrl.matches(".*\\.(png|svg|jpg|jpeg|gif)$")) {
-            throw new InvalidFileException("Profile image must be a valid image URL ending with .png, .svg, .jpg, .jpeg, or .gif");
         }
 
         return FileMetadata.builder()
@@ -88,7 +86,7 @@ public class S3FileServiceImpl implements S3FileService {
             return new InputStreamResource(inputStream);
 
         } catch (NoSuchKeyException e) {
-            throw new RuntimeException("File not found: " + fileName, e);
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to download file from RustFS", e);
         }

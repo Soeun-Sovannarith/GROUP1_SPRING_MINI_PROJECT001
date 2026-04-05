@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.http.HttpServletRequest;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+
 import java.net.URI;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -122,6 +124,21 @@ public class GlobalExceptionHandler {
         );
         pd.setType(URI.create("about:blank"));
         pd.setTitle("Bad Request");
+        pd.setInstance(URI.create(request.getRequestURI()));
+        pd.setProperty("timestamp", Instant.now());
+        return pd;
+    }
+
+    @ExceptionHandler(NoSuchKeyException.class)
+    public ProblemDetail handleFileNotFound(
+            NoSuchKeyException ex,
+            HttpServletRequest request
+    ) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                "The file you are looking for does not exist in our storage."
+        );
+        pd.setTitle("File Not Found");
         pd.setInstance(URI.create(request.getRequestURI()));
         pd.setProperty("timestamp", Instant.now());
         return pd;
