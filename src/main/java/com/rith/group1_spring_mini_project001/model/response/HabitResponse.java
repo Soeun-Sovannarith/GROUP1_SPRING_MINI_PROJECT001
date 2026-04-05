@@ -1,16 +1,14 @@
 package com.rith.group1_spring_mini_project001.model.response;
 
-import com.rith.group1_spring_mini_project001.model.model.UserApp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class HabitResponse {
@@ -19,6 +17,6 @@ public class HabitResponse {
     private String description;
     private String frequency;
     private Boolean isActive;
-    private UserApp appUserResponse;
-    private Timestamp createAt;
+    private AppUserResponse appUserResponse;
+    private LocalDateTime createdAt;
 }
