@@ -21,9 +21,13 @@ public interface AchievementRepository {
 
     @Select("SELECT a.* FROM achievements a " +
             "JOIN app_user_achievements aua ON a.achievement_id = aua.achievement_id " +
-            "WHERE aua.app_user_id = #{userId} " +
+            "WHERE aua.app_user_id = #{userId}::uuid " +
             "ORDER BY aua.achieved_at DESC " +
             "OFFSET #{offset} LIMIT #{size}")
     @ResultMap("achievementMapper")
     List<Achievement> getAchievementsCurrentUser(@Param("userId") UUID userId, @Param("offset") Integer offset, @Param("size") Integer size);
+
+    @Select("SELECT * FROM achievements WHERE xp_required <= #{xp} AND achievement_id NOT IN (SELECT achievement_id FROM app_user_achievements WHERE app_user_id = #{userId}::uuid)")
+    @ResultMap("achievementMapper")
+    List<Achievement> findUnlockableAchievements(@Param("xp") Integer xp, @Param("userId") UUID userId);
 }
