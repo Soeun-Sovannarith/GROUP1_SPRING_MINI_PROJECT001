@@ -25,7 +25,7 @@ public class OtpServiceImpl implements OtpService {
     private final RedisService redisService;
     private final ObjectMapper objectMapper;
 
-    private static final String OTP_PREFIX     = "otp:";
+    private static final String OTP_PREFIX = "otp:";
     private static final String PENDING_PREFIX = "pending:";
 
     @Override
@@ -40,8 +40,9 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public UserApp verifyRegisterOtp(String email, String otp) {
+        String cleanOtp = otp != null ? otp.replaceAll("\\s+", "") : "";
         Object storedOtp = redisService.get(OTP_PREFIX + email);
-        if (storedOtp == null || !storedOtp.toString().equals(otp))
+        if (storedOtp == null || !storedOtp.toString().equals(cleanOtp))
             throw new RuntimeException("Invalid or expired OTP");
 
         Object pendingObj = redisService.get(PENDING_PREFIX + email);
@@ -58,8 +59,7 @@ public class OtpServiceImpl implements OtpService {
                         .password(passwordEncoder.encode(pending.getPassword()))
                         .isVerified(true)
                         .createdAt(LocalDateTime.now())
-                        .build()
-        );
+                        .build());
 
         redisService.delete(OTP_PREFIX + email);
         redisService.delete(PENDING_PREFIX + email);

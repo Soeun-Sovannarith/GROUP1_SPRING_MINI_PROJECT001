@@ -9,7 +9,6 @@ import com.rith.group1_spring_mini_project001.model.response.AuthLoginResponse;
 import com.rith.group1_spring_mini_project001.repository.UserAppRepository;
 import com.rith.group1_spring_mini_project001.service.OtpService;
 import com.rith.group1_spring_mini_project001.service.RedisService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class AuthController {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getIdentifier(),
                         request.getPassword()
                 )
         );
@@ -62,25 +61,28 @@ public class AuthController {
                         .build()
         );
     }
-    // Step 1 — save to Redis + send OTP
+    
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<Void>> register(
             @RequestBody RegisterRequest request) {
 
         if (userAppRepository.existsByEmail(request.getEmail()) > 0)
             throw new RuntimeException("Email already exists");
+        if (userAppRepository.existsByUsername(request.getUsername()) > 0)
+            throw new RuntimeException("Username already exists");
 
         redisService.save(PENDING_PREFIX + request.getEmail(), request, 10);
         otpService.sendRegisterOtp(request.getEmail());
 
         return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .success(true)
                 .status(HttpStatus.OK)
                 .message("OTP sent to " + request.getEmail() + ". Please verify your OTP to complete registration.")
                 .data(null)
+                .timestamp(Instant.now())
                 .build());
     }
 
-    // Step 2 — verify OTP + save user to DB
     @PostMapping("/verify-otp")
     public ResponseEntity<ApiResponse<Void>> verifyOtp(
             @RequestParam String email,
@@ -104,9 +106,11 @@ public class AuthController {
         otpService.sendRegisterOtp(email);
 
         return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .success(true)
                 .status(HttpStatus.OK)
                 .message("OTP resent to " + email)
                 .data(null)
+                .timestamp(Instant.now())
                 .build());
     }
 }

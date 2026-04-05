@@ -23,6 +23,10 @@ public interface UserAppRepository {
             @Result(property = "createdAt",       column = "created_at")
     })
     UserApp findByEmail(String email);
+    
+    @Select("SELECT * FROM app_users WHERE email = #{identifier} OR username = #{identifier}")
+    @ResultMap("UserAppMapper")
+    UserApp findByUsernameOrEmail(String identifier);
 
     @Update("""
         UPDATE app_users
@@ -59,6 +63,9 @@ public interface UserAppRepository {
 
     @Select("SELECT COUNT(*) FROM app_users WHERE email = #{email}")
     int existsByEmail(String email);
+
+    @Select("SELECT COUNT(*) FROM app_users WHERE username = #{username}")
+    int existsByUsername(String username);
 
     @Select("SELECT * FROM app_users WHERE app_user_id = #{id}::uuid")
     @ResultMap("UserAppMapper")

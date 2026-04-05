@@ -16,12 +16,11 @@ public class UserAppServiceImpl implements UserAppService {
     private final UserAppRepository userAppRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserApp user = userAppRepository.findByEmail(email);
-        System.out.println("USER FOUND: " + user);
-        System.out.println("IS VERIFIED: " + user.getIsVerified());
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        UserApp user = userAppRepository.findByUsernameOrEmail(identifier);
+        
         if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + email);
+            throw new UsernameNotFoundException("User not found: " + identifier);
         }
         return user;
     }
