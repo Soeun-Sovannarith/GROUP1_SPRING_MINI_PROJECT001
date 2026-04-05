@@ -30,10 +30,6 @@ public class HabitLogServiceImpl implements HabitLogService {
         Habit habit = habitRepository.findByIdAndUserId(request.getHabitId(), userId);
         if (habit == null) throw new ResourceNotFoundException("Habit with ID " + request.getHabitId() + " not found");
 
-        if (habitLogRepository.hasLoggedToday(request.getHabitId())) {
-            throw new IllegalArgumentException("You have already logged this habit today. Come back tomorrow!");
-        }
-
         int xpEarned = 10;
         HabitLog log = HabitLog.builder()
                 .habitLogId(UUID.randomUUID())

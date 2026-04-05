@@ -1,6 +1,7 @@
 package com.rith.group1_spring_mini_project001.service.impl;
 
 import com.rith.group1_spring_mini_project001.exception.InvalidFileException;
+import com.rith.group1_spring_mini_project001.exception.ResourceNotFoundException;
 import com.rith.group1_spring_mini_project001.model.model.FileMetadata;
 import com.rith.group1_spring_mini_project001.service.S3FileService;
 import lombok.RequiredArgsConstructor;
@@ -85,8 +86,11 @@ public class S3FileServiceImpl implements S3FileService {
             // Wrap the InputStream in a Spring Resource and return it to controller
             return new InputStreamResource(inputStream);
 
-        } catch (NoSuchKeyException e) {
-            throw e;
+        } catch (S3Exception e) {
+            if (e.statusCode() == 404) {
+                throw new ResourceNotFoundException("File not found: " + fileName);
+            }
+            throw new RuntimeException("S3 Service Error", e);
         } catch (Exception e) {
             throw new RuntimeException("Failed to download file from RustFS", e);
         }
