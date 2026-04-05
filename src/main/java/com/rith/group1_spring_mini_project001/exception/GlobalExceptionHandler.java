@@ -98,9 +98,10 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+        ex.printStackTrace(); // Optional: Prints the stack trace
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "An unexpected error occurred. Please try again later."
+                "Error: " + ex.getMessage() + " - Cause: " + (ex.getCause() != null ? ex.getCause().getMessage() : "none")
         );
         pd.setType(URI.create("about:blank"));
         pd.setTitle("Internal Server Error");

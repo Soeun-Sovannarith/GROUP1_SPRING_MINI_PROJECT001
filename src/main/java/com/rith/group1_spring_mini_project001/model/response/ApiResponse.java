@@ -1,6 +1,7 @@
 package com.rith.group1_spring_mini_project001.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
@@ -15,6 +16,7 @@ public class ApiResponse<T> {
     private boolean success;
     private HttpStatus status;
     private String message;
+    @JsonProperty("payload")
     private T data;
     private Instant timestamp;
 }

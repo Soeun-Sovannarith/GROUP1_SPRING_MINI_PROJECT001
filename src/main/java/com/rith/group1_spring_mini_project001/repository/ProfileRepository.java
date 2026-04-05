@@ -23,9 +23,9 @@ public interface ProfileRepository {
             @Result(property = "createdAt",       column = "created_at")
     })
     @Select("""
-        Update app_users set username = #{req.username} , profile_image = #{req.profileImageUrl} where app_user_id= #{appUserId} returning *
+        Update app_users set username = #{req.username} , profile_image = #{req.profileImageUrl} where app_user_id = #{appUserId}::uuid returning *
     """)
-    UserApp updateUserProfile(UUID appUserId, @Param("req") ProfileRequest request);
+    UserApp updateUserProfile(@Param("appUserId") UUID appUserId, @Param("req") ProfileRequest request);
 
 
     @Delete("""

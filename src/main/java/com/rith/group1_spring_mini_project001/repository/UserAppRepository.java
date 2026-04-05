@@ -3,6 +3,8 @@ package com.rith.group1_spring_mini_project001.repository;
 import com.rith.group1_spring_mini_project001.model.model.UserApp;
 import com.rith.group1_spring_mini_project001.util.UUIDTypeHandler;
 import org.apache.ibatis.annotations.*;
+
+import java.util.UUID;
 @Mapper
 public interface UserAppRepository {
 
@@ -57,4 +59,11 @@ public interface UserAppRepository {
 
     @Select("SELECT COUNT(*) FROM app_users WHERE email = #{email}")
     int existsByEmail(String email);
+
+    @Select("SELECT * FROM app_users WHERE app_user_id = #{id}::uuid")
+    @ResultMap("UserAppMapper")
+    UserApp findById(@Param("id") UUID id);
+
+    @Update("UPDATE app_users SET xp = #{xp}, level = #{level} WHERE app_user_id = #{userId}::uuid")
+    void updateXpAndLevel(@Param("xp") Integer xp, @Param("level") Integer level, @Param("userId") UUID userId);
 }
